@@ -18,12 +18,16 @@ while IFS="=" read -u 10 -a line || [[ -n $line ]]; do
   # Move the app we want to deploy to a temp directory.
   app_tmp_dir="$(mktemp -d)"
   mv -T "$TMP_WORK_DIR/$app_subdir" "$app_tmp_dir/app"
+  # hack
+  mv -T "$TMP_WORK_DIR/yellow_pages" "$app_tmp_dir/yp"
 
   # Delete all files that aren't related to the app we are trying to deploy
   find "$TMP_WORK_DIR" -mindepth 1 -delete
 
   # Move the app back into the TMP_WORK_DIR
   find "$app_tmp_dir/app" -mindepth 1 -maxdepth 1 -print0 | xargs -0 mv -t "$TMP_WORK_DIR"
+  # hack
+  find "$app_tmp_dir/yp" -mindepth 1 -maxdepth 1 -print0 | xargs -0 mv -t "$TMP_WORK_DIR/../yellow_pages"
 
   rm -rf "$app_tmp_dir"
   exit
