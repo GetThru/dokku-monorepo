@@ -27,7 +27,11 @@ while IFS="=" read -u 10 -a line || [[ -n $line ]]; do
   # Move the app back into the TMP_WORK_DIR
   find "$app_tmp_dir/app" -mindepth 1 -maxdepth 1 -print0 | xargs -0 mv -t "$TMP_WORK_DIR"
   # hack
-  find "$app_tmp_dir/yp" -mindepth 1 -maxdepth 1 -print0 | xargs -0 mv -t "$TMP_WORK_DIR/../yellow_pages"
+  yp_path=$(readlink -f "$TMP_WORK_DIR/../yellow_pages")
+  mkdir $yp_path
+  dokku_log_info2 $yp_path
+  dokku_log_info2 $TMP_WORK_DIR
+  find "$app_tmp_dir/yp" -mindepth 1 -maxdepth 1 -print0 | xargs -0 mv -t "$yp_path"
 
   rm -rf "$app_tmp_dir"
   exit
